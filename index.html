@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дерево успеха - Рефлексия</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 50%, #90EE90 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c5f2d;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .tree-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            background: transparent;
+        }
+
+        .tree {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .trunk {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 200px;
+            background: linear-gradient(to right, #8B4513, #A0522D, #8B4513);
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        .foliage {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, #228B22 0%, #2E8B57 40%, #006400 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 
+                inset -20px -20px 40px rgba(0,0,0,0.2),
+                inset 20px 20px 40px rgba(255,255,255,0.1);
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .foliage:hover {
+            transform: translateX(-50%) scale(1.02);
+        }
+
+        .apple {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 3;
+            animation: grow 0.5s ease-out;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .apple:hover {
+            transform: scale(1.2);
+        }
+
+        .apple.red {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c92a2a);
+        }
+
+        .apple.yellow {
+            background: radial-gradient(circle at 30% 30%, #ffe066, #fcc419);
+        }
+
+        .apple.green {
+            background: radial-gradient(circle at 30% 30%, #69db7c, #40c057);
+        }
+
+        @keyframes grow {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .controls {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 300px;
+        }
+
+        .legend {
+            margin-bottom: 30px;
+        }
+
+        .legend h3 {
+            color: #2c5f2d;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .legend-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .legend-apple {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 15px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .legend-apple.red {
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #c92a2a);
+        }
+
+        .legend-apple.yellow {
+            background: radial-gradient(circle at 30% 30%, #ffe066, #fcc419);
+        }
+
+        .legend-apple.green {
+            background: radial-gradient(circle at 30% 30%, #69db7c, #40c057);
+        }
+
+        .legend-text {
+            font-size: 1em;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-red {
+            background: linear-gradient(135deg, #ff6b6b, #c92a2a);
+        }
+
+        .btn-yellow {
+            background: linear-gradient(135deg, #ffe066, #fcc419);
+            color: #333;
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, #69db7c, #40c057);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #868e96, #495057);
+            margin-top: 10px;
+        }
+
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stats h4 {
+            color: #2c5f2d;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 5px 15px;
+            background: white;
+            border-radius: 15px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 968px) {
+            .tree-container {
+                width: 400px;
+                height: 500px;
+            }
+            
+            .foliage {
+                width: 350px;
+                height: 300px;
+                top: 80px;
+            }
+            
+            .trunk {
+                width: 40px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌳 Дерево успеха</h1>
+        <p class="subtitle">Добавьте яблоки на дерево, кликнув на кнопку или на крону дерева</p>
+        
+        <div class="main-content">
+            <div class="tree-container">
+                <div class="tree">
+                    <div class="foliage" id="foliage"></div>
+                    <div class="trunk"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="legend">
+                    <h3>Легенда:</h3>
+                    <div class="legend-item" onclick="addApple('red')">
+                        <div class="legend-apple red"></div>
+                        <div class="legend-text">
+                            <strong>Всё получилось</strong><br>
+                            <small>Отличный результат!</small>
+                        </div>
+                    </div>
+                    <div class="legend-item" onclick="addApple('yellow')">
+                        <div class="legend-apple yellow"></div>
+                        <div class="legend-text">
+                            <strong>Получилось не сразу</strong><br>
+                            <small>Были трудности</small>
+                        </div>
+                    </div>
+                    <div class="legend-item" onclick="addApple('green')">
+                        <div class="legend-apple green"></div>
+                        <div class="legend-text">
+                            <strong>Нужна помощь</strong><br>
+                            <small>Требуется поддержка</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn btn-red" onclick="addApple('red')">🍎 Всё получилось</button>
+                    <button class="btn btn-yellow" onclick="addApple('yellow')">🟡 Получилось не сразу</button>
+                    <button class="btn btn-green" onclick="addApple('green')">🟢 Нужна помощь</button>
+                    <button class="btn btn-clear" onclick="clearTree()">🗑️ Очистить дерево</button>
+                </div>
+                
+                <div class="stats">
+                    <h4>📊 Статистика</h4>
+                    <div id="statsContent">
+                        <span class="stat-item" style="color: #c92a2a">🍎 0</span>
+                        <span class="stat-item" style="color: #f08c00">🟡 0</span>
+                        <span class="stat-item" style="color: #40c057">🟢 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apples = [];
+        
+        // Загрузка яблок при старте
+        window.onload = function() {
+            const saved = localStorage.getItem('successTreeApples');
+            if (saved) {
+                apples = JSON.parse(saved);
+                apples.forEach(apple => createAppleElement(apple.type, apple.x, apple.y, false));
+                updateStats();
+            }
+        };
+        
+        // Клик по кроне дерева
+        document.getElementById('foliage').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Случайный выбор типа яблока или можно сделать меню
+            const types = ['red', 'yellow', 'green'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            addAppleAtPosition(randomType, x, y);
+        });
+        
+        function addApple(type) {
+            const foliage = document.getElementById('foliage');
+            const rect = foliage.getBoundingClientRect();
+            
+            // Случайная позиция в пределах кроны
+            const maxX = rect.width - 40;
+            const maxY = rect.height - 40;
+            const x = Math.random() * maxX + 20;
+            const y = Math.random() * maxY + 20;
+            
+            addAppleAtPosition(type, x, y);
+        }
+        
+        function addAppleAtPosition(type, x, y) {
+            const apple = {
+                id: Date.now(),
+                type: type,
+                x: x,
+                y: y
+            };
+            
+            apples.push(apple);
+            saveApples();
+            createAppleElement(type, x, y, true);
+            updateStats();
+        }
+        
+        function createAppleElement(type, x, y, animate) {
+            const foliage = document.getElementById('foliage');
+            const apple = document.createElement('div');
+            apple.className = `apple ${type}`;
+            apple.style.left = x + 'px';
+            apple.style.top = y + 'px';
+            apple.id = 'apple-' + Date.now() + Math.random();
+            
+            // Удаление по клику
+            apple.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (confirm('Удалить это яблоко?')) {
+                    apple.remove();
+                    apples = apples.filter(a => a.x !== x || a.y !== y);
+                    saveApples();
+                    updateStats();
+                }
+            });
+            
+            foliage.appendChild(apple);
+        }
+        
+        function saveApples() {
+            localStorage.setItem('successTreeApples', JSON.stringify(apples));
+        }
+        
+        function updateStats() {
+            const red = apples.filter(a => a.type === 'red').length;
+            const yellow = apples.filter(a => a.type === 'yellow').length;
+            const green = apples.filter(a => a.type === 'green').length;
+            
+            document.getElementById('statsContent').innerHTML = `
+                <span class="stat-item" style="color: #c92a2a">🍎 ${red}</span>
+                <span class="stat-item" style="color: #f08c00">🟡 ${yellow}</span>
+                <span class="stat-item" style="color: #40c057">🟢 ${green}</span>
+            `;
+        }
+        
+        function clearTree() {
+            if (confirm('Вы уверены, что хотите очистить всё дерево?')) {
+                apples = [];
+                saveApples();
+                document.querySelectorAll('.apple').forEach(apple => apple.remove());
+                updateStats();
+            }
+        }
+    </script>
+</body>
+</html>
